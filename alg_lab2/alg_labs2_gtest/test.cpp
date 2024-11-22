@@ -87,6 +87,9 @@ TEST(ArrayTest, ResizeFunctionality) {
         arr.insert(i);
     }
     EXPECT_EQ(arr.size(), 100);
+
+    EXPECT_EQ(arr[8], 8);
+    EXPECT_EQ(arr[45], 45);
     EXPECT_EQ(arr[99], 99);
 }
 
@@ -143,6 +146,157 @@ TEST(ArrayTest, CBeginCEnd) {
     EXPECT_EQ(sum, 15);
 }
 
+TEST(PersonArrayTest, DefaultConstructor) {
+    Array<Person> arr;
+    EXPECT_EQ(arr.size(), 0);
+}
+
+TEST(PersonArrayTest, InsertElement) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+
+    EXPECT_EQ(arr.size(), 2);
+    EXPECT_EQ(arr[0].getName(), "Yana");
+    EXPECT_EQ(arr[0].getAge(), 25);
+    EXPECT_EQ(arr[1].getName(), "Ilsur");
+    EXPECT_EQ(arr[1].getAge(), 30);
+}
+
+TEST(PersonArrayTest, InsertAtSpecificIndex) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Igor", 35));
+    arr.insert(1, Person("Ilsur", 30));
+
+    EXPECT_EQ(arr.size(), 3);
+    EXPECT_EQ(arr[0].getName(), "Yana");
+    EXPECT_EQ(arr[1].getName(), "Ilsur");
+    EXPECT_EQ(arr[2].getName(), "Igor");
+}
+
+TEST(PersonArrayTest, RemoveElement) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    arr.remove(1);
+
+    EXPECT_EQ(arr.size(), 2);
+    EXPECT_EQ(arr[0].getName(), "Yana");
+    EXPECT_EQ(arr[1].getName(), "Igor");
+}
+
+TEST(PersonArrayTest, IndexOperator) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+
+    EXPECT_EQ(arr[0].getName(), "Yana");
+    EXPECT_EQ(arr[0].getAge(), 25);
+
+    arr[0] = Person("Ilsur", 30);
+    EXPECT_EQ(arr[0].getName(), "Ilsur");
+    EXPECT_EQ(arr[0].getAge(), 30);
+}
+
+TEST(PersonArrayTest, IteratorDereferenceAndIncrement) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    auto it = arr.iterator();
+    EXPECT_EQ(it.get().getName(), "Yana");
+    ++it;
+    EXPECT_EQ(it.get().getName(), "Ilsur");
+    it++;
+    EXPECT_EQ(it.get().getName(), "Igor");
+}
+
+TEST(PersonArrayTest, IteratorTraversal) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    auto it = arr.iterator();
+    std::string result;
+    while (it != arr.end()) {
+        result += it.get().getName() + " ";
+        ++it;
+    }
+    EXPECT_EQ(result, "Yana Ilsur Igor ");
+}
+
+TEST(PersonArrayTest, BeginEndRangeFor) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    std::string result;
+    for (const auto& person : arr) {
+        result += person.getName() + " ";
+    }
+
+    EXPECT_EQ(result, "Yana Ilsur Igor ");
+}
+
+TEST(PersonArrayTest, CBeginCEnd) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    std::string result;
+    for (auto it = arr.cbegin(); it != arr.cend(); ++it) {
+        result += it.get().getName() + " ";
+    }
+
+    EXPECT_EQ(result, "Yana Ilsur Igor ");
+}
+
+TEST(PersonArrayTest, CopyConstructor) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+
+    Array<Person> copy = arr;
+
+    EXPECT_EQ(copy.size(), 2);
+    EXPECT_EQ(copy[0].getName(), "Yana");
+    EXPECT_EQ(copy[1].getName(), "Ilsur");
+}
+
+TEST(PersonArrayTest, MoveConstructor) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+
+    Array<Person> moved = std::move(arr);
+
+    EXPECT_EQ(moved.size(), 2);
+    EXPECT_EQ(moved[0].getName(), "Yana");
+    EXPECT_EQ(moved[1].getName(), "Ilsur");
+    EXPECT_EQ(arr.size(), 0);
+}
+
+TEST(PersonArrayTest, ResizeFunctionality) {
+    Array<Person> arr;
+
+    for (int i = 0; i < 100; ++i) {
+        arr.insert(Person("Person" + std::to_string(i), i));
+    }
+
+    EXPECT_EQ(arr.size(), 100);
+    EXPECT_EQ(arr[8].getName(), "Person8");
+    EXPECT_EQ(arr[8].getAge(), 8);
+    EXPECT_EQ(arr[45].getName(), "Person45");
+    EXPECT_EQ(arr[45].getAge(), 45);
+    EXPECT_EQ(arr[99].getName(), "Person99");
+    EXPECT_EQ(arr[99].getAge(), 99);
+}
 
 TEST(PersonArrayTest, InsertAndAccess) {
     Array<Person> arr;

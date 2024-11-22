@@ -21,6 +21,7 @@ private:
         }
         free(data_);
         data_ = new_data;
+
         capacity_ = new_capacity;
     }
 
@@ -30,6 +31,7 @@ public:
         assert(data_ && "Memory allocation failed");
     }
 
+    // без explicit Array<int> arr = 154; не создаст ошибку, а создаст новый массив размером 154
     explicit Array(int capacity) : data_(nullptr), size_(0), capacity_(capacity) {
         data_ = static_cast<T*>(malloc(capacity_ * sizeof(T)));
         assert(data_ && "Memory allocation failed");
