@@ -42,7 +42,6 @@ public:
         free(data_);
     }
 
-    // конструктор копирования. соблюдается ли условие?
     Array(const Array& other) : data_(nullptr), size_(other.size_), capacity_(other.capacity_) {
         data_ = static_cast<T*>(malloc(capacity_ * sizeof(T)));
         assert(data_ && "Memory allocation failed");
@@ -85,7 +84,6 @@ public:
         return *this;
     }
 
-    // соблюдается ли move-семантика?
     int insert(const T& value) {
         if (size_ == capacity_) {
             resize(capacity_ * 2);
@@ -94,7 +92,6 @@ public:
         return size_++;
     }
 
-    // соблюдается ли move-семантика? 
     int insert(int index, const T& value) {
         assert(index >= 0 && index <= size_);
         if (size_ == capacity_) {
@@ -133,7 +130,6 @@ public:
         return size_;
     }
 
-    // Вложенный класс Iterator
     class Iterator {
     private:
         T* current_;
@@ -158,45 +154,47 @@ public:
             return current_ < end_;
         }
 
-        template<typename T>
-        class Array<T>::Iterator {
-        private:
-            T* current_;
-            T* end_;
+        const T& operator*() const {
+            return *current_;
+        }
 
-        public:
-            Iterator(T* start, T* end) : current_(start), end_(end) {}
+        T& operator*() {
+            return *current_;
+        }
 
-            const T& operator*() const {
-                return *current_;
-            }
+        Iterator& operator++() {
+            ++current_;
+            return *this;
+        }
 
-            T& operator*() {
-                return *current_;
-            }
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            ++current_;
+            return temp;
+        }
 
-            // Префиксный инкремент
-            Iterator& operator++() {
-                ++current_;
-                return *this;
-            }
-
-            // Постфиксный инкремент
-            Iterator operator++(int) {
-                Iterator temp = *this;
-                ++current_;
-                return temp;
-            }
-
-            bool operator!=(const Iterator& other) const {
-                return current_ != other.current_;
-            }
-        };
-
+        bool operator!=(const Iterator& other) const {
+            return current_ != other.current_;
+        }
     };
 
-    // Метод для получения итератора
     Iterator iterator() {
         return Iterator(data_, data_ + size_);
+    }
+
+    Iterator begin() {
+        return Iterator(data_, data_ + size_);
+    }
+
+    Iterator end() {
+        return Iterator(data_ + size_, data_ + size_);
+    }
+
+    const Iterator cbegin() const {
+        return Iterator(data_, data_ + size_);
+    }
+
+    const Iterator cend() const {
+        return Iterator(data_ + size_, data_ + size_);
     }
 };
