@@ -93,7 +93,6 @@ TEST(ArrayTest, ResizeFunctionality) {
     EXPECT_EQ(arr[99], 99);
 }
 
-
 TEST(ArrayTest, IteratorDereferenceAndIncrement) {
     Array<int> arr;
     for (int i = 1; i <= 5; ++i) {
@@ -144,6 +143,80 @@ TEST(ArrayTest, CBeginCEnd) {
     }
 
     EXPECT_EQ(sum, 15);
+}
+
+TEST(ArrayTest, ConstIteratorTraversal) {
+    const Array<int> arr = []() {
+        Array<int> temp;
+        temp.insert(10);
+        temp.insert(20);
+        temp.insert(30);
+        return temp;
+        }();
+
+    auto it = arr.iterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += std::to_string(it.get()) + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "10 20 30 ");
+}
+
+TEST(ArrayTest, ConstIteratorRangeFor) {
+    const Array<int> arr = []() {
+        Array<int> temp;
+        temp.insert(10);
+        temp.insert(20);
+        temp.insert(30);
+        return temp;
+        }();
+
+    std::string result;
+    for (const auto& value : arr) {
+        result += std::to_string(value) + " ";
+    }
+
+    EXPECT_EQ(result, "10 20 30 ");
+}
+
+TEST(ArrayTest, ConstReverseIterator) {
+    const Array<int> arr = []() {
+        Array<int> temp;
+        temp.insert(10);
+        temp.insert(20);
+        temp.insert(30);
+        return temp;
+        }();
+
+    auto it = arr.reverseIterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += std::to_string(it.get()) + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "30 20 10 ");
+}
+
+TEST(ArrayTest, ReverseIteratorTraversal) {
+    Array<int> arr;
+    arr.insert(10);
+    arr.insert(20);
+    arr.insert(30);
+
+    auto it = arr.reverseIterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += std::to_string(it.get()) + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "30 20 10 ");
 }
 
 TEST(PersonArrayTest, DefaultConstructor) {
@@ -354,4 +427,79 @@ TEST(PersonArrayTest, RangeForPerson) {
     }
 
     EXPECT_EQ(result, "Yana Ilsur Igor ");
+}
+
+TEST(PersonArrayTest, ConstIteratorTraversal) {
+    const Array<Person> arr = []() {
+        Array<Person> temp;
+        temp.insert(Person("Yana", 25));
+        temp.insert(Person("Ilsur", 30));
+        temp.insert(Person("Igor", 35));
+        return temp;
+        }();
+
+    auto it = arr.iterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += it.get().getName() + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "Yana Ilsur Igor ");
+}
+
+//TEST(PersonArrayTest, ConstIteratorRangeFor) {
+//    const Array<Person> arr = []() {
+//        Array<Person> temp;
+//        temp.insert(Person("Yana", 25));
+//        temp.insert(Person("Ilsur", 30));
+//        temp.insert(Person("Igor", 35));
+//        return temp;
+//        }();
+//
+//    std::string result;
+//    for (const auto& person : arr) {
+//        result += person.getName() + " ";
+//    }
+//
+//    EXPECT_EQ(result, "Yana Ilsur Igor ");
+//}
+
+TEST(PersonArrayTest, ConstReverseIterator) {
+    const Array<Person> arr = []() {
+        Array<Person> temp;
+        temp.insert(Person("Yana", 25));
+        temp.insert(Person("Ilsur", 30));
+        temp.insert(Person("Igor", 35));
+        return temp;
+        }();
+
+    auto it = arr.reverseIterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += it.get().getName() + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "Igor Ilsur Yana ");
+}
+
+
+TEST(PersonArrayTest, ReverseIteratorTraversal) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    auto it = arr.reverseIterator();
+
+    std::string result;
+    while (it.hasNext()) {
+        result += it.get().getName() + " ";
+        it.next();
+    }
+
+    EXPECT_EQ(result, "Igor Ilsur Yana ");
 }
