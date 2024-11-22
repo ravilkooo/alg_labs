@@ -117,6 +117,29 @@ TEST(ArrayTest, IteratorDereferenceAndIncrement) {
     EXPECT_FALSE(it != arr.end());
 }
 
+
+TEST(ArrayTest, Increments) {
+    Array<int> arr;
+    for (int i = 1; i <= 5; ++i) {
+        arr.insert(i);
+    }
+
+    auto it = arr.iterator();
+    EXPECT_EQ(*it, 1);
+
+    
+    EXPECT_EQ(*(++it), 2);
+
+    EXPECT_EQ(*(it++), 2);
+
+    ++it;
+    ++it;
+    EXPECT_EQ(*it, 5);
+
+    ++it;
+    EXPECT_FALSE(it != arr.end());
+}
+
 TEST(ArrayTest, BeginEndRangeFor) {
     Array<int> arr;
     for (int i = 1; i <= 5; ++i) {
@@ -285,6 +308,18 @@ TEST(PersonArrayTest, IteratorDereferenceAndIncrement) {
     EXPECT_EQ(it.get().getName(), "Ilsur");
     it++;
     EXPECT_EQ(it.get().getName(), "Igor");
+}
+
+TEST(PersonArrayTest, Increments) {
+    Array<Person> arr;
+    arr.insert(Person("Yana", 25));
+    arr.insert(Person("Ilsur", 30));
+    arr.insert(Person("Igor", 35));
+
+    auto it = arr.iterator();
+    EXPECT_EQ(it.get().getName(), "Yana");
+    EXPECT_EQ((++it).get().getName(), "Ilsur");
+    EXPECT_EQ((it++).get().getName(), "Ilsur");
 }
 
 TEST(PersonArrayTest, IteratorTraversal) {
